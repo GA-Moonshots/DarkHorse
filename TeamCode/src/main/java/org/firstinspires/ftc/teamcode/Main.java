@@ -25,6 +25,6 @@ public class Main extends CoreOpMode {
 
     @Override
     public void runStop() {
-
+        drive.stop();
     }
 }

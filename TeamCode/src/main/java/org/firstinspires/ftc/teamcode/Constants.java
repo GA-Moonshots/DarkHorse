@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 public class Constants {
+    public static final double INPUT_THRESHOLD = 0.1;
+
     // ----- HARDWARE MAP NAMES ------
     // -------- SENSOR NAMES ---------
     public static final String IMU_NAME = "imu";
