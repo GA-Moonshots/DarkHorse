@@ -15,8 +15,6 @@ public class Main extends CoreOpMode {
     public void runInit() {
         odometry = new ThreeWheelOdomentry(this);
         drive = new MecanumDrive(this);
-
-
     }
 
     @Override
