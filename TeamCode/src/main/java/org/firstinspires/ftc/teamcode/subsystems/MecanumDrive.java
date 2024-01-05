@@ -1,9 +1,15 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.internal.CoreOpMode;
+import org.firstinspires.ftc.teamcode.messengers.DrivetrainMessager;
+import org.firstinspires.ftc.teamcode.sensors.Odometry;
+
+import java.util.Locale;
 
 public class MecanumDrive extends Drivetrain {
 
@@ -12,6 +18,9 @@ public class MecanumDrive extends Drivetrain {
     private final DcMotor rightFront;
     private final DcMotor leftBack;
     private final DcMotor rightBack;
+
+    private boolean isTargetSet = false;
+    private double gyroTarget = 0.0d;
 
     public MecanumDrive(CoreOpMode opMode) {
         super(opMode);
@@ -27,6 +36,8 @@ public class MecanumDrive extends Drivetrain {
         rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
     }
 
     @Override
@@ -39,10 +50,11 @@ public class MecanumDrive extends Drivetrain {
             double temp = forward;
             forward = forward * Math.cos(Math.toRadians(diff)) - strafe * Math.sin(Math.toRadians(diff));
             strafe = temp * Math.sin(Math.toRadians(diff)) + strafe * Math.cos(Math.toRadians(diff));
-            if(telemetry != null)
-                telemetry.addData("Mode", "Field Centric");
-        } else if(telemetry != null)
-            telemetry.addData("Mode", "Robot Centric");
+
+            messenger.addData("Mode", "Field Centric");
+        } else {
+            messenger.addData("Mode", "Robot Centric");
+        }
 
         isGyroLocked = turn <= Constants.INPUT_THRESHOLD;
         if(isGyroLocked && !isTargetSet) {
@@ -80,9 +92,8 @@ public class MecanumDrive extends Drivetrain {
         rightFrontPower /= powerScale;
 
 
-        if(telemetry != null)
-            telemetry.addData("Motors", "(%.2f, %.2f, %.2f, %.2f)",
-                    leftFrontPower, leftBackPower, rightBackPower, rightFrontPower);
+        messenger.addData("Motors", String.format(Locale.US, "(%.2f, %.2f, %.2f, %.2f)",
+                leftFrontPower, leftBackPower, rightBackPower, rightFrontPower));
 
         drive(
                 leftFrontPower,
