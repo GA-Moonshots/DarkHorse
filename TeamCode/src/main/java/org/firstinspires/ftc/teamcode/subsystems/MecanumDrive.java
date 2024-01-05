@@ -1,13 +1,10 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.internal.CoreOpMode;
-import org.firstinspires.ftc.teamcode.messengers.DrivetrainMessager;
-import org.firstinspires.ftc.teamcode.sensors.Odometry;
 
 import java.util.Locale;
 
@@ -32,6 +29,8 @@ public class MecanumDrive extends Drivetrain {
         // According to RoadRunner docs: "Relying on the internal PID for velocity control can prove
         // to be quite frustrating. It is quite the fickle controller sometimes." Therefore, I am
         // running this without encoders until I get back and test it both ways.
+        // Additionally, in RUN_WITHOUT_ENCODER mode, we have an additional 4 possible motor encoder
+        // slots, as otherwise 7 out of 8 motor encoders would be taken by the drivetrain. Not ideal.
         leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

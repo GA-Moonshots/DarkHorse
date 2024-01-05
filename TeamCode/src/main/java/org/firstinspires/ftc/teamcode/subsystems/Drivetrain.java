@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.messengers.DrivetrainMessager;
 import org.firstinspires.ftc.teamcode.internal.CoreOpMode;
 import org.firstinspires.ftc.teamcode.internal.CoreSubsystem;
 import org.firstinspires.ftc.teamcode.sensors.IMU;
-import org.firstinspires.ftc.teamcode.sensors.Odometry;
+import org.firstinspires.ftc.teamcode.sensors.ThreeWheelOdomentry;
 
 public abstract class Drivetrain extends CoreSubsystem {
     protected boolean isFieldCentric = true;
@@ -15,7 +15,7 @@ public abstract class Drivetrain extends CoreSubsystem {
 
     // Sensors
     protected IMU imu;
-    protected Odometry odometry;
+    protected ThreeWheelOdomentry odometry;
 
     // Messengers
     protected DrivetrainMessager messenger;
@@ -27,7 +27,7 @@ public abstract class Drivetrain extends CoreSubsystem {
         fieldCentricTarget = imu.getZAngle();
 
         try {
-            odometry = opMode.getSensor(Odometry.class);
+            odometry = opMode.getSensor(ThreeWheelOdomentry.class);
         } catch (RobotCoreException e) {
             // I kinda like this, it directly gives you an error and tells you exactly what happened.
             opMode._intlSensorNotFound("Drivetrain", "Odometry");
@@ -62,6 +62,8 @@ public abstract class Drivetrain extends CoreSubsystem {
     public void makeRobotCentric() {
         this.isFieldCentric = false;
     }
+
+    public void setFieldCentricTarget() {this.fieldCentricTarget = this.imu.getZAngle();}
 
     public abstract void drive(double forward, double strafe, double turn);
     public abstract void stop();

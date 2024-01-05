@@ -10,7 +10,6 @@ import com.acmerobotics.roadrunner.ftc.OverflowEncoder;
 import com.acmerobotics.roadrunner.ftc.PositionVelocityPair;
 import com.acmerobotics.roadrunner.ftc.RawEncoder;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.internal.CoreOpMode;
@@ -18,7 +17,7 @@ import org.firstinspires.ftc.teamcode.internal.CoreSensor;
 
 import java.util.Locale;
 
-public class Odometry extends CoreSensor {
+public class ThreeWheelOdomentry extends CoreSensor {
     Twist2dDual<Time> twist;
     
     @Override
@@ -61,7 +60,7 @@ public class Odometry extends CoreSensor {
 
     private int lastPar0Pos, lastPar1Pos, lastPerpPos;
 
-    public Odometry(CoreOpMode opMode) {
+    public ThreeWheelOdomentry(CoreOpMode opMode) {
 
         left = new OverflowEncoder(new RawEncoder(opMode.hardwareMap.get(DcMotorEx.class, Constants.LEFT_ODOMETRY_NAME)));
         right = new OverflowEncoder(new RawEncoder(opMode.hardwareMap.get(DcMotorEx.class, Constants.RIGHT_ODOMETRY_NAME)));
