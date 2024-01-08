@@ -3,7 +3,8 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.config.Constants;
+import org.firstinspires.ftc.teamcode.config.DriveConfig;
 import org.firstinspires.ftc.teamcode.internal.CoreOpMode;
 
 import java.util.Locale;
@@ -15,9 +16,6 @@ public class MecanumDrive extends Drivetrain {
     private final DcMotor rightFront;
     private final DcMotor leftBack;
     private final DcMotor rightBack;
-
-    private boolean isTargetSet = false;
-    private double gyroTarget = 0.0d;
 
     public MecanumDrive(CoreOpMode opMode) {
         super(opMode);
@@ -35,8 +33,6 @@ public class MecanumDrive extends Drivetrain {
         rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-
     }
 
     @Override
@@ -45,7 +41,7 @@ public class MecanumDrive extends Drivetrain {
         if (isFieldCentric) {
             // Learn more:
             // https://www.geogebra.org/m/fmegkksm
-            double diff = fieldCentricTarget - imu.getZAngle();
+            double diff = fieldCentricTarget - localizer.getHeading();
             double temp = forward;
             forward = forward * Math.cos(Math.toRadians(diff)) - strafe * Math.sin(Math.toRadians(diff));
             strafe = temp * Math.sin(Math.toRadians(diff)) + strafe * Math.cos(Math.toRadians(diff));
@@ -53,14 +49,6 @@ public class MecanumDrive extends Drivetrain {
             messenger.addData("Mode", "Field Centric");
         } else {
             messenger.addData("Mode", "Robot Centric");
-        }
-
-        isGyroLocked = turn <= Constants.INPUT_THRESHOLD;
-        if(isGyroLocked && !isTargetSet) {
-            gyroTarget = imu.getYAngle();
-            isTargetSet = true;
-        } else if(!isGyroLocked) {
-            isTargetSet = false;
         }
 
         // I'm tired of figuring out the input problems so the inputs are still in flight stick mode
@@ -72,7 +60,7 @@ public class MecanumDrive extends Drivetrain {
         double leftBackPower = -forward - strafe + turn;
         double rightBackPower = forward - strafe + turn;
 
-        double powerScale = Constants.MOTOR_MAX_SPEED * Math.max(1,
+        double powerScale = DriveConfig.MOTOR_MAX_SPEED * Math.max(1,
                 Math.max(
                         Math.max(
                                 Math.abs(leftFrontPower),
@@ -106,10 +94,10 @@ public class MecanumDrive extends Drivetrain {
      * Clips and executes given motor speeds
      */
     protected void drive(double m1, double m2, double m3, double m4) {
-        leftFront.setPower(Range.clip(m1, -Constants.MOTOR_MAX_SPEED, Constants.MOTOR_MAX_SPEED));
-        rightFront.setPower(Range.clip(m2, -Constants.MOTOR_MAX_SPEED, Constants.MOTOR_MAX_SPEED));
-        leftBack.setPower(Range.clip(m3, -Constants.MOTOR_MAX_SPEED, Constants.MOTOR_MAX_SPEED));
-        rightBack.setPower(Range.clip(m4, -Constants.MOTOR_MAX_SPEED, Constants.MOTOR_MAX_SPEED));
+        leftFront.setPower(Range.clip(m1, -DriveConfig.MOTOR_MAX_SPEED, DriveConfig.MOTOR_MAX_SPEED));
+        rightFront.setPower(Range.clip(m2, -DriveConfig.MOTOR_MAX_SPEED, DriveConfig.MOTOR_MAX_SPEED));
+        leftBack.setPower(Range.clip(m3, -DriveConfig.MOTOR_MAX_SPEED, DriveConfig.MOTOR_MAX_SPEED));
+        rightBack.setPower(Range.clip(m4, -DriveConfig.MOTOR_MAX_SPEED, DriveConfig.MOTOR_MAX_SPEED));
     }
 
 

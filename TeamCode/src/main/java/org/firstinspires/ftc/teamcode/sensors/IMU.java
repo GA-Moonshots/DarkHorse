@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.sensors;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -10,11 +9,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
-import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.config.Constants;
+import org.firstinspires.ftc.teamcode.internal.CoreLocalizer;
 import org.firstinspires.ftc.teamcode.internal.CoreOpMode;
-import org.firstinspires.ftc.teamcode.internal.CoreSensor;
 
-public class IMU extends CoreSensor {
+public class IMU extends CoreLocalizer {
     public static final AngleUnit ANGLE_UNIT = AngleUnit.DEGREES;
 
     public com.qualcomm.robotcore.hardware.IMU imu;
@@ -24,7 +23,7 @@ public class IMU extends CoreSensor {
     private Position storedPosition;
 
     public IMU(CoreOpMode opMode) {
-        opMode.addSensor(this);
+        super(opMode);
 
         com.qualcomm.robotcore.hardware.IMU.Parameters parameters =
                 new com.qualcomm.robotcore.hardware.IMU.Parameters(

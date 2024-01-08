@@ -2,18 +2,16 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.internal.CoreLocalizer;
 import org.firstinspires.ftc.teamcode.internal.CoreOpMode;
-import org.firstinspires.ftc.teamcode.sensors.ThreeWheelOdomentry;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDrive;
 
 @TeleOp(name = "Dark Horse")
 public class Main extends CoreOpMode {
     Drivetrain drive;
-    ThreeWheelOdomentry odometry;
     @Override
     public void runInit() {
-        odometry = new ThreeWheelOdomentry(this);
         drive = new MecanumDrive(this);
     }
 
@@ -28,19 +26,15 @@ public class Main extends CoreOpMode {
             drive.toggleFieldCentric();
         }
 
-        if(gamepad1.getYButton()) {
+        if(gamepad1.getBButton()) {
             drive.setFieldCentricTarget();
         }
 
-        if(gamepad1.getDPadHorizontal() < 0 && gamepad1.getDPadVertical() == 0) {
-
-        } else if(gamepad1.getDPadHorizontal() > 0 && gamepad1.getDPadVertical() == 0) {
-
-        } else if(gamepad1.getDPadHorizontal() == 0 && gamepad1.getDPadVertical() > 0) {
-
-        } else {
-
-        }
+        double forward = gamepad1.getLeftStickY();
+        double strafe = gamepad1.getLeftStickX();
+        double turn = gamepad1.getRightStickX();
+        double multi = gamepad1.getLeftButton() ? 0.2 : 1.0;
+        drive.drive(forward * multi, strafe * multi, turn * multi);
     }
 
     @Override

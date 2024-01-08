@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.internal;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.config.Config;
 
 public class CoreGamepad {
     private Gamepad gamepad;
@@ -127,7 +127,7 @@ public class CoreGamepad {
         // I'm using v for value here since I'm lazy
         double v = gamepad.left_stick_x;
 
-        if(Math.abs(v) <= Constants.INPUT_THRESHOLD) {
+        if(Math.abs(v) <= Config.INPUT_THRESHOLD) {
             return 0;
         }
         return v;
@@ -137,7 +137,7 @@ public class CoreGamepad {
     public double getLeftStickY() {
         double v = -gamepad.left_stick_y;
 
-        if(Math.abs(v) <= Constants.INPUT_THRESHOLD) {
+        if(Math.abs(v) <= Config.INPUT_THRESHOLD) {
             return 0;
         }
         return v;
@@ -146,7 +146,7 @@ public class CoreGamepad {
     public double getRightStickX() {
         double v = gamepad.right_stick_x;
 
-        if(Math.abs(v) <= Constants.INPUT_THRESHOLD) {
+        if(Math.abs(v) <= Config.INPUT_THRESHOLD) {
             return 0;
         }
         return v;
@@ -155,7 +155,7 @@ public class CoreGamepad {
     public double getRightStickY() {
         double v = gamepad.right_stick_y;
 
-        if(Math.abs(v) <= Constants.INPUT_THRESHOLD) {
+        if(Math.abs(v) <= Config.INPUT_THRESHOLD) {
             return 0;
         }
         return v;
@@ -168,7 +168,7 @@ public class CoreGamepad {
         double v = gamepad.left_trigger;
 
         // These are always positive, so we can simplify a bit
-        if(v <= Constants.INPUT_THRESHOLD) {
+        if(v <= Config.INPUT_THRESHOLD) {
             return 0;
         }
         return v;
@@ -178,7 +178,7 @@ public class CoreGamepad {
         double v = gamepad.right_trigger;
 
         // These are always positive, so we can simplify a bit
-        if(v <= Constants.INPUT_THRESHOLD) {
+        if(v <= Config.INPUT_THRESHOLD) {
             return 0;
         }
         return v;

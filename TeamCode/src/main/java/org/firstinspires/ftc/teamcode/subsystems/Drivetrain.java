@@ -1,53 +1,35 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import com.qualcomm.robotcore.exception.RobotCoreException;
-
-import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.config.DriveConfig;
+import org.firstinspires.ftc.teamcode.internal.CoreLocalizer;
+import org.firstinspires.ftc.teamcode.sensors.localizers.ThreeWheelLocalizer;
 import org.firstinspires.ftc.teamcode.messengers.DrivetrainMessager;
 import org.firstinspires.ftc.teamcode.internal.CoreOpMode;
 import org.firstinspires.ftc.teamcode.internal.CoreSubsystem;
-import org.firstinspires.ftc.teamcode.sensors.IMU;
-import org.firstinspires.ftc.teamcode.sensors.ThreeWheelOdomentry;
 
 public abstract class Drivetrain extends CoreSubsystem {
     protected boolean isFieldCentric = true;
     protected double fieldCentricTarget;
 
     // Sensors
-    protected IMU imu;
-    protected ThreeWheelOdomentry odometry;
+    protected CoreLocalizer localizer;
 
     // Messengers
     protected DrivetrainMessager messenger;
 
-    protected boolean isGyroLocked = true;
 
     public Drivetrain(CoreOpMode opMode) {
-        imu = new IMU(opMode);
-        fieldCentricTarget = imu.getZAngle();
+        super(opMode);
 
-        try {
-            odometry = opMode.getSensor(ThreeWheelOdomentry.class);
-        } catch (RobotCoreException e) {
-            // I kinda like this, it directly gives you an error and tells you exactly what happened.
-            opMode._intlSensorNotFound("Drivetrain", "Odometry");
-        }
+        messenger = opMode.getMessenger(DrivetrainMessager.class);
+        localizer = opMode.getSensor(ThreeWheelLocalizer.class);
 
-        try {
-            imu = opMode.getSensor(IMU.class);
-        } catch (RobotCoreException e) {
-            opMode._intlSensorNotFound("Drivetrain", "IMU");
-        }
-
-        messenger = new DrivetrainMessager(opMode);
-        if(Constants.DRIVETRAIN_MESSENGER_ENABLED)
+        if(DriveConfig.MESSENGER_ENABLED)
             messenger.enable();
         else
             messenger.disable();
 
-        // After everything sets up, add to the opMode updates
-        opMode.addMessenger(messenger);
-        opMode.addSubsystem(this);
+
     }
 
     // INTERNAL STATE COMMANDS
@@ -63,7 +45,7 @@ public abstract class Drivetrain extends CoreSubsystem {
         this.isFieldCentric = false;
     }
 
-    public void setFieldCentricTarget() {this.fieldCentricTarget = this.imu.getZAngle();}
+    public void setFieldCentricTarget() {fieldCentricTarget = localizer.getHeading();}
 
     public abstract void drive(double forward, double strafe, double turn);
     public abstract void stop();

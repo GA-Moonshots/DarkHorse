@@ -14,10 +14,12 @@ public abstract class CoreMessenger {
     // overlay on the dashboard.
     private boolean isDisabled = false;
     private Map<Object, Object> data = new HashMap<>();
-    Telemetry telemetry;
+    protected Telemetry telemetry;
 
     public CoreMessenger(CoreOpMode opMode) {
         this.telemetry = opMode.telemetry;
+
+        opMode.addMessenger(this);
     }
 
     public void enable() {

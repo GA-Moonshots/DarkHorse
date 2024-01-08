@@ -5,7 +5,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.Exposur
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.config.Constants;
 import org.firstinspires.ftc.teamcode.internal.CoreOpMode;
 import org.firstinspires.ftc.teamcode.internal.CoreSensor;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -24,6 +24,7 @@ public class Camera extends CoreSensor {
     String status;
 
     public Camera(CoreOpMode opMode) {
+        super(opMode);
         aprilTag = new AprilTagProcessor.Builder()
                 .setOutputUnits(DistanceUnit.INCH, AngleUnit.DEGREES)
                 .build();

@@ -1,53 +1,65 @@
 package org.firstinspires.ftc.teamcode.internal;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.exception.RobotCoreException;
 
 public abstract class CoreOpMode extends LinearOpMode {
     public CoreGamepad gamepad1;
     public CoreGamepad gamepad2;
-    private final ArrayList<CoreSensor> sensors = new ArrayList<>();
-    private final ArrayList<CoreSubsystem> subsystems = new ArrayList<>();
-    private final ArrayList<CoreMessenger> messengers = new ArrayList<>();
+    private ArrayList<CoreSensor> sensors = new ArrayList<>();
+    private ArrayList<CoreSubsystem> subsystems = new ArrayList<>();
+    private ArrayList<CoreMessenger> messengers = new ArrayList<>();
 
     public void addSubsystem(CoreSubsystem system) {subsystems.add(system);}
     public void addSensor(CoreSensor sensor) {sensors.add(sensor);}
     public void addMessenger(CoreMessenger messenger) { messengers.add(messenger);}
 
-    public <T extends CoreSensor> T getSensor(Class<T> cls, String name) throws RobotCoreException {
+    public <T extends CoreSensor> T getSensor(Class<T> cls, String name) {
         for(CoreSensor sensor : sensors) {
             if(cls.isInstance(sensor) && sensor.name.equals(name)) {
                 return (T) sensor;
             }
         }
-
-        throw new RobotCoreException(String.format("Sensor with name %s of type %s was not found.", name, cls.getName()));
+        try {
+            return cls.getConstructor(CoreOpMode.class, String.class).newInstance(this, name);
+        } catch(Exception e) {
+            throw new RuntimeException(String.format("Sensor with name %s of type %s was not found.", name, cls.getName()));
+        }
     }
 
-    public <T extends CoreSensor> T getSensor(Class<T> cls) throws RobotCoreException {
+    public <T extends CoreSensor> T getSensor(Class<T> cls) {
         for(CoreSensor sensor : sensors) {
             if(cls.isInstance(sensor)) {
                 return (T) sensor;
             }
         }
-
-        throw new RobotCoreException(String.format("Sensor with of type %s was not found.", cls.getName()));
+        try {
+            return cls.getConstructor(CoreOpMode.class).newInstance(this);
+        } catch(Exception e) {
+            throw new RuntimeException(String.format("Sensor with of type %s was not found.", cls.getName()));
+        }
     }
 
-    // Just in case something else requires a different subsystem's messenger.
-    public <T extends CoreMessenger> T getMessenger(Class<T> cls) throws RobotCoreException {
+    // Just in case something else requires a different subsystem's messenger. Again, even I think
+    // having a messenger class might be overkill.
+    public <T extends CoreMessenger> T getMessenger(Class<T> cls) {
         for(CoreMessenger messenger : messengers) {
             if(cls.isInstance(messenger)) {
                 return (T) messenger;
             }
         }
-
-        throw new RobotCoreException(String.format("Messenger with of type %s was not found.", cls.getName()));
+        try {
+            return cls.getConstructor(CoreOpMode.class).newInstance(this);
+        } catch(Exception e) {
+            throw new RuntimeException(String.format("Messenger with of type %s was not found.", cls.getName()));
+        }
     }
 
     // Updates the gamepads, sensors, and then subsystems in this order.
@@ -92,29 +104,34 @@ public abstract class CoreOpMode extends LinearOpMode {
         telemetry.update();
     }
 
-    public void _intlSensorNotFound(String submoduleName, String sensorName, String sensorID) {
-        throw new RuntimeException(String.format(Locale.US,
-                "Submodule %s depends on sensor %s with ID %s, which was not found. Perhaps your initialization order is wrong?", submoduleName, sensorName, sensorID));
-    }
-    public void _intlSensorNotFound(String submoduleName, String sensorName) {
-        throw new RuntimeException(String.format(Locale.US,
-                "Submodule %s depends on sensor %s, which was not found. Perhaps your initialization order is wrong?", submoduleName, sensorName));
-    }
-
     @Override
     public void runOpMode() {
         gamepad1 = new CoreGamepad(super.gamepad1);
         gamepad2 = new CoreGamepad(super.gamepad2);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        runInit();
-        waitForStart();
-        runStart();
-        runUpdate();
-        runStop();
+
+        // Optimize sensor reads
+        // Note that if a sensor that breaks the spec of CoreSensor is being called multiple times
+        // it requires that this mode be set to MANUAL and an additional for loop should be added in
+        // _intlUpdate calling clearBulkCache.
+        List<LynxModule> hubs = hardwareMap.getAll(LynxModule.class);
+        for (LynxModule hub : hubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+        }
+
+        try {
+            runInit();
+            waitForStart();
+            runStart();
+            runUpdate();
+            runStop();
+        } catch(InterruptedException e) {
+            runStop();
+        }
     }
 
-    public abstract void runInit();
-    public abstract void runStart();
-    public abstract void runUpdate();
+    public abstract void runInit() throws InterruptedException;
+    public abstract void runStart() throws InterruptedException;
+    public abstract void runUpdate() throws InterruptedException;
     public abstract void runStop();
 }
