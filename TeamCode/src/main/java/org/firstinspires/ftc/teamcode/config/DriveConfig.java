@@ -4,8 +4,7 @@ package org.firstinspires.ftc.teamcode.config;
 @com.acmerobotics.dashboard.config.Config
 public class DriveConfig extends Config {
     public static volatile boolean MESSENGER_ENABLED = true;
-    public static volatile double DISPLAY_X_SIZE = 40;
-    public static volatile double DISPLAY_Y_SIZE = 40;
+    public static volatile double DISPLAY_SIZE = 40;
     public static volatile double TICKS_PER_REV = 1;
     public static volatile double MAX_RPM = 1;
     /*

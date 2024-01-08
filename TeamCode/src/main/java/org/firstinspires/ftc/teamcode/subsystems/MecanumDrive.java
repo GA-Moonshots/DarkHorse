@@ -110,9 +110,4 @@ public class MecanumDrive extends Drivetrain {
     public void init() {
 
     }
-
-    @Override
-    public void update() {
-        // Continue with the last update state
-    }
 }

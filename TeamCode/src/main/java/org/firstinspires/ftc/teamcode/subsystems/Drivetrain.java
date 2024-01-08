@@ -47,6 +47,18 @@ public abstract class Drivetrain extends CoreSubsystem {
 
     public void setFieldCentricTarget() {fieldCentricTarget = localizer.getHeading();}
 
+    // AUTONOMOUS COMMANDS
+    public void autoRunPath() {
+
+    }
+
+    @Override
+    public void update() {
+        // Continue with the last update state
+        messenger.addRobotToFieldOverlay(localizer.getXPosition(), localizer.getYPosition(), localizer.getHeading());
+    }
+
+    // Drivetrain implementation specific commands
     public abstract void drive(double forward, double strafe, double turn);
     public abstract void stop();
 }
