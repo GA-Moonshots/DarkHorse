@@ -13,8 +13,8 @@ import org.firstinspires.ftc.teamcode.config.OdometryConfig;
 import org.firstinspires.ftc.teamcode.internal.CoreLocalizer;
 import org.firstinspires.ftc.teamcode.internal.CoreMessenger;
 import org.firstinspires.ftc.teamcode.internal.CoreOpMode;
-import org.firstinspires.ftc.teamcode.math.Vector;
-import org.firstinspires.ftc.teamcode.messengers.DrivetrainMessager;
+import org.firstinspires.ftc.teamcode.internal.math.Vector;
+import org.firstinspires.ftc.teamcode.messengers.DrivetrainMessenger;
 
 import kotlin.NotImplementedError;
 
@@ -29,7 +29,7 @@ public class ThreeWheelLocalizer extends CoreLocalizer {
         right = new OverflowEncoder(new RawEncoder(opMode.hardwareMap.get(DcMotorEx.class, Constants.RIGHT_ODOMETRY_NAME)));
         center = new OverflowEncoder(new RawEncoder(opMode.hardwareMap.get(DcMotorEx.class, Constants.CENTER_ODOMETRY_NAME)));
 
-        messenger = opMode.getMessenger(DrivetrainMessager.class);
+        messenger = opMode.getMessenger(DrivetrainMessenger.class);
     }
 
     @Override
@@ -54,6 +54,8 @@ public class ThreeWheelLocalizer extends CoreLocalizer {
         // right = dx-L*dTheta/2
         // center = dy +BdTheta
 
+        // TODO: THIS IS WRONG
+        // use deltaPosition instead of velocity
         double dx = (rightPosVel.velocity * OdometryConfig.LEFT_X_POSITION) - (leftPosVel.velocity * OdometryConfig.RIGHT_X_POSITION) / OdometryConfig.X_DISTANCE;
         double dTheta = (rightPosVel.velocity - leftPosVel.velocity) / OdometryConfig.X_DISTANCE;
         double dy = centerPosVel.velocity - OdometryConfig.CENTER_Y_POSITION * dTheta;

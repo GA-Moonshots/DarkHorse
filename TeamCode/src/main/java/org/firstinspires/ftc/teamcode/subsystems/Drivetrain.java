@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import org.firstinspires.ftc.teamcode.config.DriveConfig;
 import org.firstinspires.ftc.teamcode.internal.CoreLocalizer;
 import org.firstinspires.ftc.teamcode.sensors.localizers.ThreeWheelLocalizer;
-import org.firstinspires.ftc.teamcode.messengers.DrivetrainMessager;
+import org.firstinspires.ftc.teamcode.messengers.DrivetrainMessenger;
 import org.firstinspires.ftc.teamcode.internal.CoreOpMode;
 import org.firstinspires.ftc.teamcode.internal.CoreSubsystem;
 
@@ -15,13 +15,13 @@ public abstract class Drivetrain extends CoreSubsystem {
     protected CoreLocalizer localizer;
 
     // Messengers
-    protected DrivetrainMessager messenger;
+    protected DrivetrainMessenger messenger;
 
 
     public Drivetrain(CoreOpMode opMode) {
         super(opMode);
 
-        messenger = opMode.getMessenger(DrivetrainMessager.class);
+        messenger = opMode.getMessenger(DrivetrainMessenger.class);
         localizer = opMode.getSensor(ThreeWheelLocalizer.class);
 
         if(DriveConfig.MESSENGER_ENABLED)

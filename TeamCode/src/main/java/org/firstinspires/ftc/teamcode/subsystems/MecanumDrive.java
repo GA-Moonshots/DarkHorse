@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.config.Constants;
 import org.firstinspires.ftc.teamcode.config.DriveConfig;
 import org.firstinspires.ftc.teamcode.internal.CoreOpMode;
+import org.firstinspires.ftc.teamcode.internal.math.Vector;
 
 import java.util.Locale;
 
@@ -39,12 +42,12 @@ public class MecanumDrive extends Drivetrain {
     public void drive(double forward, double strafe, double turn) {
         // Field Centric adjustment
         if (isFieldCentric) {
+
+            Vector2d movement = Vector.rotateVector(new Pose2d(strafe, forward, fieldCentricTarget - localizer.getHeading()));
             // Learn more:
             // https://www.geogebra.org/m/fmegkksm
-            double diff = fieldCentricTarget - localizer.getHeading();
-            double temp = forward;
-            forward = forward * Math.cos(Math.toRadians(diff)) - strafe * Math.sin(Math.toRadians(diff));
-            strafe = temp * Math.sin(Math.toRadians(diff)) + strafe * Math.cos(Math.toRadians(diff));
+            forward = movement.y;
+            strafe = movement.x;
 
             messenger.addData("Mode", "Field Centric");
         } else {

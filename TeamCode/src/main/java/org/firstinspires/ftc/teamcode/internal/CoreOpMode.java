@@ -18,7 +18,10 @@ public abstract class CoreOpMode extends LinearOpMode {
     private ArrayList<CoreMessenger> messengers = new ArrayList<>();
 
     public void addSubsystem(CoreSubsystem system) {subsystems.add(system);}
-    public void addSensor(CoreSensor sensor) {sensors.add(sensor);}
+    public void addSensor(CoreSensor sensor) {
+        sensors.add(sensor);
+        sensor.update();
+    }
     public void addMessenger(CoreMessenger messenger) { messengers.add(messenger);}
 
     public <T extends CoreSensor> T getSensor(Class<T> cls, String name) {

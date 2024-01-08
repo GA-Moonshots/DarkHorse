@@ -14,9 +14,9 @@ import java.util.List;
 
 // This class is responsible for sending relevant information to the telemetry output and
 // to FtcDashboard (aka sending position, rotation, other odometry to the field overlay on the dashboard
-public class DrivetrainMessager extends CoreMessenger {
+public class DrivetrainMessenger extends CoreMessenger {
     List<Pose2d> history;
-    public DrivetrainMessager(CoreOpMode opMode) {
+    public DrivetrainMessenger(CoreOpMode opMode) {
         super(opMode);
     }
 

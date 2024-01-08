@@ -34,9 +34,6 @@ public class IMU extends CoreLocalizer {
 
         imu = opMode.hardwareMap.get(com.qualcomm.robotcore.hardware.IMU.class, Constants.IMU_NAME);
         imu.initialize(parameters);
-
-        // Load initial values
-        update();
     }
 
     /**
