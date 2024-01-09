@@ -7,6 +7,12 @@ import org.firstinspires.ftc.teamcode.internal.CoreOpMode;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDrive;
 
+
+// TODO: 
+// 1. Check double nature of storage in Pose2d
+// 2. Rework XY Localizer grid to match the controller input relative to the field.
+// 3. Take an input from the runInit method that allows for the localizer to start in the spot that it is actually in
+
 @TeleOp(name = "Dark Horse")
 public class Main extends CoreOpMode {
     Drivetrain drive;
