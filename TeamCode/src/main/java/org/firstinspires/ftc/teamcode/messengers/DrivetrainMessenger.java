@@ -1,10 +1,10 @@
 package org.firstinspires.ftc.teamcode.messengers;
 
 import com.acmerobotics.dashboard.canvas.Canvas;
-import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 
 import org.firstinspires.ftc.teamcode.config.DriveConfig;
 import org.firstinspires.ftc.teamcode.internal.CoreMessenger;
@@ -34,17 +34,17 @@ public class DrivetrainMessenger extends CoreMessenger {
         double[] yPoints = new double[history.size()];
         for (int i = 0; i < history.size(); i++) {
             Pose2d pose = history.get(i);
-            xPoints[i] = pose.position.x;
-            yPoints[i] = pose.position.y;
+            xPoints[i] = pose.getX();
+            yPoints[i] = pose.getY();
         }
         canvas.strokePolyline(xPoints, yPoints);
     }
 
     public void drawRobot(Canvas canvas, Pose2d pose) {
-        canvas.strokeCircle(pose.position.x, pose.position.y, DriveConfig.DISPLAY_SIZE);
-        Vector2d v = pose.heading.vec().times(DriveConfig.DISPLAY_SIZE);
-        double x1 = pose.position.x + v.x / 2, y1 = pose.position.y + v.y / 2;
-        double x2 = pose.position.x + v.x, y2 = pose.position.y + v.y;
+        canvas.strokeCircle(pose.getX(), pose.getY(), DriveConfig.DISPLAY_SIZE);
+        Vector2d v = pose.headingVec().times(DriveConfig.DISPLAY_SIZE);
+        double x1 = pose.getX() + v.getX() / 2, y1 = pose.getY() + v.getY() / 2;
+        double x2 = pose.getX() + v.getX(), y2 = pose.getY() + v.getY();
         canvas.strokeLine(x1, y1, x2, y2);
     }
 }
