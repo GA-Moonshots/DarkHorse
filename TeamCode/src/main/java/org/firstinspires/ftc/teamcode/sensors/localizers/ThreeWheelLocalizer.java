@@ -21,6 +21,7 @@ import kotlin.NotImplementedError;
 public class ThreeWheelLocalizer extends CoreLocalizer {
     private final Encoder left, right, center;
     private CoreMessenger messenger;
+    private int lastLeftPos, lastRightPos, lastCenterPos;
 
     public ThreeWheelLocalizer(CoreOpMode opMode) {
         super(opMode);
@@ -28,6 +29,11 @@ public class ThreeWheelLocalizer extends CoreLocalizer {
         left = new OverflowEncoder(new RawEncoder(opMode.hardwareMap.get(DcMotorEx.class, Constants.LEFT_ODOMETRY_NAME)));
         right = new OverflowEncoder(new RawEncoder(opMode.hardwareMap.get(DcMotorEx.class, Constants.RIGHT_ODOMETRY_NAME)));
         center = new OverflowEncoder(new RawEncoder(opMode.hardwareMap.get(DcMotorEx.class, Constants.CENTER_ODOMETRY_NAME)));
+
+        // Preload values
+        lastLeftPos = left.getPositionAndVelocity().position;
+        lastRightPos = right.getPositionAndVelocity().position;
+        lastCenterPos = center.getPositionAndVelocity().position;
 
         messenger = opMode.getMessenger(DrivetrainMessenger.class);
     }
@@ -54,11 +60,13 @@ public class ThreeWheelLocalizer extends CoreLocalizer {
         // right = dx-L*dTheta/2
         // center = dy +BdTheta
 
-        // TODO: THIS IS WRONG
-        // use deltaPosition instead of velocity
-        double dx = (rightPosVel.velocity * OdometryConfig.LEFT_X_POSITION) - (leftPosVel.velocity * OdometryConfig.RIGHT_X_POSITION) / OdometryConfig.X_DISTANCE;
-        double dTheta = (rightPosVel.velocity - leftPosVel.velocity) / OdometryConfig.X_DISTANCE;
-        double dy = centerPosVel.velocity - OdometryConfig.CENTER_Y_POSITION * dTheta;
+        int leftDelta = leftPosVel.position - lastLeftPos;
+        int rightDelta = rightPosVel.position - lastRightPos;
+        int centerDelta = centerPosVel.position - lastCenterPos;
+
+        double dx = (rightDelta * OdometryConfig.LEFT_X_POSITION) - (leftDelta * OdometryConfig.RIGHT_X_POSITION) / OdometryConfig.X_DISTANCE;
+        double dTheta = (rightDelta - leftDelta) / OdometryConfig.X_DISTANCE;
+        double dy = centerDelta - OdometryConfig.CENTER_Y_POSITION * dTheta;
 
         // Vector Rotation based on new theta
         double theta = currentPose.heading.toDouble() + dTheta;
@@ -68,6 +76,9 @@ public class ThreeWheelLocalizer extends CoreLocalizer {
         double y = currentPose.position.y + gradient.y;
 
         currentPose = new Pose2d(x, y, theta);
+        lastLeftPos = leftPosVel.position;
+        lastRightPos = rightPosVel.position;
+        lastCenterPos = centerPosVel.position;
     }
 
     private void constVelUpdate() {
@@ -78,9 +89,13 @@ public class ThreeWheelLocalizer extends CoreLocalizer {
         PositionVelocityPair rightPosVel = right.getPositionAndVelocity();
         PositionVelocityPair centerPosVel = center.getPositionAndVelocity();
 
-        double dx = (rightPosVel.velocity * OdometryConfig.LEFT_X_POSITION) - (leftPosVel.velocity * OdometryConfig.RIGHT_X_POSITION) / OdometryConfig.X_DISTANCE;
-        double dTheta = (rightPosVel.velocity - leftPosVel.velocity) / OdometryConfig.X_DISTANCE;
-        double dy = centerPosVel.velocity - OdometryConfig.CENTER_Y_POSITION * dTheta;
+        int leftDelta = leftPosVel.position - lastLeftPos;
+        int rightDelta = rightPosVel.position - lastRightPos;
+        int centerDelta = centerPosVel.position - lastCenterPos;
+
+        double dx = (rightDelta * OdometryConfig.LEFT_X_POSITION) - (leftDelta * OdometryConfig.RIGHT_X_POSITION) / OdometryConfig.X_DISTANCE;
+        double dTheta = (rightDelta - leftDelta) / OdometryConfig.X_DISTANCE;
+        double dy = centerDelta - OdometryConfig.CENTER_Y_POSITION * dTheta;
 
         double rf = dx / dTheta;
         double rfdy = rf * Math.sin(dTheta);
@@ -100,6 +115,9 @@ public class ThreeWheelLocalizer extends CoreLocalizer {
         double y = currentPose.position.y + gradient.y;
 
         currentPose = new Pose2d(x, y, theta);
+        lastLeftPos = leftPosVel.position;
+        lastRightPos = rightPosVel.position;
+        lastCenterPos = centerPosVel.position;
     }
 
     private void constAccelUpdate() {
