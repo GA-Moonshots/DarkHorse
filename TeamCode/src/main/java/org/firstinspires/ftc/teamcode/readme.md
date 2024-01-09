@@ -51,3 +51,13 @@ rewriting of any other file than the one the fix is in.
 The overall version of the project is represented as the highest version component of any file. If the
 drivetrain was at version 1.2.2.1 and the arm at version 0.4.5.1, the overall TeamCode version would 
 be 1.4.5.1.
+
+## But this is so complex, why can't it all be in one file?
+
+It could. It absolutely could. But then all of a sudden complex systems with autonomous and driver
+commands, dashboard syncs and updates all in the same file, become 600+ lines of code, and very hard
+to organize. This way, one only needs to know the concepts behind the Core classes, and they don't 
+have to worry about the exact nature of the file. For example, the CoreMessenger class seems very 
+complex when you try to understand the logic of it. But the concept behind it is the same as an 
+extended version of telemetry. By itself, it would be cut as too much extra code, but together with
+sensors and subsystems, it finds its role in very clearly.
