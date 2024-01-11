@@ -2,20 +2,17 @@ package org.firstinspires.ftc.teamcode.internal;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.exception.RobotCoreException;
 
 public abstract class CoreOpMode extends LinearOpMode {
     public CoreGamepad gamepad1;
     public CoreGamepad gamepad2;
-    private ArrayList<CoreSensor> sensors = new ArrayList<>();
-    private ArrayList<CoreSubsystem> subsystems = new ArrayList<>();
-    private ArrayList<CoreMessenger> messengers = new ArrayList<>();
+    private final ArrayList<CoreSensor> sensors = new ArrayList<>();
+    private final ArrayList<CoreSubsystem> subsystems = new ArrayList<>();
+    private final ArrayList<CoreMessenger> messengers = new ArrayList<>();
 
     public void addSubsystem(CoreSubsystem system) {subsystems.add(system);}
     public void addSensor(CoreSensor sensor) {
@@ -67,7 +64,7 @@ public abstract class CoreOpMode extends LinearOpMode {
 
     // Updates the gamepads, sensors, and then subsystems in this order.
     // This allows for subsystems and sensors to ensure update order and no double readings for
-    // things like distance sensors. Every subsystem should hold it's own state for this call.
+    // things like distance sensors. Every subsystem should hold its own state for this call.
     // The subsystems can also report fails and telemetry by updating states instead of
     // being forced inside of large loops. This method also allows for multiple telemetries
     // to exist at once. This also allows for sensors to directly take controller input for
@@ -85,9 +82,19 @@ public abstract class CoreOpMode extends LinearOpMode {
         return opModeIsActive();
     }
 
+    private void _intlInit() {
+        sleep(25);
+
+        for(CoreSubsystem subsystem : subsystems) {
+            subsystem.init();
+        }
+    }
+
     private void _intlUpdate() {
         sleep(25);
         // Update All Sensors, even under idle
+        // This can potentially be delayed update,
+        // since we might not need all the sensors every update
         for(CoreSensor sensor : sensors) {
             sensor.update();
         }
@@ -123,6 +130,7 @@ public abstract class CoreOpMode extends LinearOpMode {
         }
 
         try {
+            _intlInit();
             runInit();
             waitForStart();
             runStart();

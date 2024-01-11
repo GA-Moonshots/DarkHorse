@@ -36,7 +36,7 @@ public class Camera extends CoreSensor {
     }
 
     @Override
-    public void update() {
+    public Twist2dDual<Time> update() {
         if(visionPortal.getCameraState() == VisionPortal.CameraState.STREAMING) {
             ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
             if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
@@ -50,6 +50,7 @@ public class Camera extends CoreSensor {
         }
         detections = aprilTag.getDetections();
         status = visionPortal.getCameraState().toString();
+        return null;
     }
 
     public List<AprilTagDetection> getDetections() {

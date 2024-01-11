@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.acmerobotics.roadrunner.Trajectory;
+
 import org.firstinspires.ftc.teamcode.config.DriveConfig;
 import org.firstinspires.ftc.teamcode.internal.CoreLocalizer;
 import org.firstinspires.ftc.teamcode.sensors.localizers.ThreeWheelLocalizer;
@@ -14,22 +16,10 @@ public abstract class Drivetrain extends CoreSubsystem {
     // Sensors
     protected CoreLocalizer localizer;
 
-    // Messengers
-    protected DrivetrainMessenger messenger;
-
-
     public Drivetrain(CoreOpMode opMode) {
         super(opMode);
 
-        messenger = opMode.getMessenger(DrivetrainMessenger.class);
         localizer = opMode.getSensor(ThreeWheelLocalizer.class);
-
-        if(DriveConfig.MESSENGER_ENABLED)
-            messenger.enable();
-        else
-            messenger.disable();
-
-
     }
 
     // INTERNAL STATE COMMANDS
@@ -45,17 +35,18 @@ public abstract class Drivetrain extends CoreSubsystem {
         this.isFieldCentric = false;
     }
 
-    public void setFieldCentricTarget() {fieldCentricTarget = localizer.getHeading();}
+    public void setFieldCentricTarget() {
+        fieldCentricTarget = localizer.getPose().angle.value();
+    }
 
     // AUTONOMOUS COMMANDS
-    public void autoRunPath() {
+    public void autoRunPath(Trajectory trajectory) {
 
     }
 
     @Override
     public void update() {
         // Continue with the last update state
-        messenger.addRobotToFieldOverlay(localizer.getXPosition(), localizer.getYPosition(), localizer.getHeading());
     }
 
     // Drivetrain implementation specific commands

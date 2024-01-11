@@ -1,21 +1,16 @@
 package org.firstinspires.ftc.teamcode.internal;
 
-import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Time;
+import com.acmerobotics.roadrunner.Twist2dDual;
 
 public abstract class CoreLocalizer extends CoreSensor {
-    protected Pose2d currentPose;
+    protected Twist2dDual<Time> pose;
 
-    public double getXPosition() {
-        return currentPose.position.x;
+    public Twist2dDual<Time> getPose() {
+        return pose;
     }
 
-    public double getYPosition() {
-        return currentPose.position.y;
-    }
-
-    public double getHeading() {
-        return currentPose.heading.toDouble();
-    }
+    public abstract void update();
 
     public CoreLocalizer(CoreOpMode opMode) {
         super(opMode);
