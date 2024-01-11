@@ -6,8 +6,8 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainCon
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.config.Constants;
-import org.firstinspires.ftc.teamcode.internal.CoreOpMode;
-import org.firstinspires.ftc.teamcode.internal.CoreSensor;
+import org.firstinspires.ftc.teamcode.core.CoreOpMode;
+import org.firstinspires.ftc.teamcode.core.CoreSensor;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;

@@ -5,10 +5,11 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.config.Constants;
 import org.firstinspires.ftc.teamcode.config.DriveConfig;
-import org.firstinspires.ftc.teamcode.internal.CoreOpMode;
-import org.firstinspires.ftc.teamcode.internal.math.Vector;
+import org.firstinspires.ftc.teamcode.core.CoreOpMode;
+import org.firstinspires.ftc.teamcode.core.math.Vector;
 
 import java.util.Locale;
 
@@ -28,30 +29,29 @@ public class MecanumDrive extends Drivetrain {
         leftBack = opMode.hardwareMap.get(DcMotor.class, Constants.LEFT_BACK_NAME);
         rightBack = opMode.hardwareMap.get(DcMotor.class, Constants.RIGHT_BACK_NAME);
         // According to RoadRunner docs: "Relying on the internal PID for velocity control can prove
-        // to be quite frustrating. It is quite the fickle controller sometimes." Therefore, I am
-        // running this without encoders until I get back and test it both ways.
+        // to be quite frustrating. It is quite the fickle controller sometimes."
         // Additionally, in RUN_WITHOUT_ENCODER mode, we have an additional 4 possible motor encoder
         // slots, as otherwise 7 out of 8 motor encoders would be taken by the drivetrain. Not ideal.
         leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
     }
 
     @Override
     public void drive(double forward, double strafe, double turn) {
         // Field Centric adjustment
         if (isFieldCentric) {
-
             Vector2d movement = Vector.rotateVector(new Pose2d(strafe, forward, fieldCentricTarget - localizer.getHeading()));
             // Learn more:
             // https://www.geogebra.org/m/fmegkksm
             forward = movement.y;
             strafe = movement.x;
 
-            messenger.addData("Mode", "Field Centric");
+            telemetry.addData("Mode", "Field Centric");
         } else {
-            messenger.addData("Mode", "Robot Centric");
+            telemetry.addData("Mode", "Robot Centric");
         }
 
         // I'm tired of figuring out the input problems so the inputs are still in flight stick mode
@@ -82,8 +82,8 @@ public class MecanumDrive extends Drivetrain {
         rightFrontPower /= powerScale;
 
 
-        messenger.addData("Motors", String.format(Locale.US, "(%.2f, %.2f, %.2f, %.2f)",
-                leftFrontPower, leftBackPower, rightBackPower, rightFrontPower));
+        telemetry.addData("Motors","(%.2f, %.2f, %.2f, %.2f)",
+                leftFrontPower, leftBackPower, rightBackPower, rightFrontPower);
 
         drive(
                 leftFrontPower,
@@ -96,7 +96,7 @@ public class MecanumDrive extends Drivetrain {
     /**
      * Clips and executes given motor speeds
      */
-    protected void drive(double m1, double m2, double m3, double m4) {
+    public void drive(double m1, double m2, double m3, double m4) {
         leftFront.setPower(Range.clip(m1, -DriveConfig.MOTOR_MAX_SPEED, DriveConfig.MOTOR_MAX_SPEED));
         rightFront.setPower(Range.clip(m2, -DriveConfig.MOTOR_MAX_SPEED, DriveConfig.MOTOR_MAX_SPEED));
         leftBack.setPower(Range.clip(m3, -DriveConfig.MOTOR_MAX_SPEED, DriveConfig.MOTOR_MAX_SPEED));
@@ -104,13 +104,4 @@ public class MecanumDrive extends Drivetrain {
     }
 
 
-    @Override
-    public void stop() {
-
-    }
-
-    @Override
-    public void init() {
-
-    }
 }

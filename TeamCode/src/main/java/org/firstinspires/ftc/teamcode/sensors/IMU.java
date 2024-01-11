@@ -10,8 +10,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.teamcode.config.Constants;
-import org.firstinspires.ftc.teamcode.internal.CoreLocalizer;
-import org.firstinspires.ftc.teamcode.internal.CoreOpMode;
+import org.firstinspires.ftc.teamcode.core.CoreLocalizer;
+import org.firstinspires.ftc.teamcode.core.CoreOpMode;
 
 public class IMU extends CoreLocalizer {
     public static final AngleUnit ANGLE_UNIT = AngleUnit.DEGREES;
@@ -41,6 +41,8 @@ public class IMU extends CoreLocalizer {
      * @return the X angle of the internal IMU in the control panel.
      */
     public double getXAngle() {
+        if(!hasUpdated)
+            update();
         return storedOrientation.firstAngle;
     }
 
@@ -168,5 +170,6 @@ public class IMU extends CoreLocalizer {
             storedVelocity = null;
             storedPosition = null;
         }
+        hasUpdated = true;
     }
 }

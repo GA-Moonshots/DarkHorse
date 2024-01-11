@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode.sensors.localizers;
 
 import com.acmerobotics.roadrunner.ftc.Encoder;
 
-import org.firstinspires.ftc.teamcode.internal.CoreLocalizer;
-import org.firstinspires.ftc.teamcode.internal.CoreOpMode;
+import org.firstinspires.ftc.teamcode.core.CoreLocalizer;
+import org.firstinspires.ftc.teamcode.core.CoreOpMode;
 import org.firstinspires.ftc.teamcode.sensors.IMU;
 
 public class TwoWheelLocalizer extends CoreLocalizer {

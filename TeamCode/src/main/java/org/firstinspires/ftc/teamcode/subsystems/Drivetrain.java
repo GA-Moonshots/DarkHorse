@@ -1,35 +1,28 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import org.firstinspires.ftc.teamcode.config.DriveConfig;
-import org.firstinspires.ftc.teamcode.internal.CoreLocalizer;
+import com.acmerobotics.roadrunner.Trajectory;
+import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+import com.acmerobotics.roadrunner.TrajectoryBuilder;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.core.CoreLocalizer;
 import org.firstinspires.ftc.teamcode.sensors.localizers.ThreeWheelLocalizer;
-import org.firstinspires.ftc.teamcode.messengers.DrivetrainMessenger;
-import org.firstinspires.ftc.teamcode.internal.CoreOpMode;
-import org.firstinspires.ftc.teamcode.internal.CoreSubsystem;
+import org.firstinspires.ftc.teamcode.core.CoreOpMode;
+import org.firstinspires.ftc.teamcode.core.CoreSubsystem;
 
 public abstract class Drivetrain extends CoreSubsystem {
     protected boolean isFieldCentric = true;
+    protected final Telemetry telemetry;
     protected double fieldCentricTarget;
 
     // Sensors
     protected CoreLocalizer localizer;
 
-    // Messengers
-    protected DrivetrainMessenger messenger;
-
-
     public Drivetrain(CoreOpMode opMode) {
         super(opMode);
 
-        messenger = opMode.getMessenger(DrivetrainMessenger.class);
+        this.telemetry = opMode.telemetry;
         localizer = opMode.getSensor(ThreeWheelLocalizer.class);
-
-        if(DriveConfig.MESSENGER_ENABLED)
-            messenger.enable();
-        else
-            messenger.disable();
-
-
     }
 
     // INTERNAL STATE COMMANDS
@@ -47,18 +40,30 @@ public abstract class Drivetrain extends CoreSubsystem {
 
     public void setFieldCentricTarget() {fieldCentricTarget = localizer.getHeading();}
 
-    // AUTONOMOUS COMMANDS
-    public void autoRunPath() {
 
-    }
 
     @Override
     public void update() {
         // Continue with the last update state
-        messenger.addRobotToFieldOverlay(localizer.getXPosition(), localizer.getYPosition(), localizer.getHeading());
+
+        // Add robot to the dashboard field based on the pose
     }
 
     // Drivetrain implementation specific commands
     public abstract void drive(double forward, double strafe, double turn);
-    public abstract void stop();
+    public abstract void drive(double m1, double m2, double m3, double m4);
+
+    public void stop() {
+        drive(0.0d, 0.0d, 0.0d, 0.0d);
+    }
+
+    @Override
+    public void init() {
+
+    }
+
+    // AUTONOMOUS COMMANDS
+    public void autoRunPath(Trajectory trajectory) {
+
+    }
 }

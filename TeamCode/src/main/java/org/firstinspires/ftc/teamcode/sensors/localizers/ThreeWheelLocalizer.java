@@ -10,18 +10,15 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.config.Constants;
 import org.firstinspires.ftc.teamcode.config.OdometryConfig;
-import org.firstinspires.ftc.teamcode.internal.CoreLocalizer;
-import org.firstinspires.ftc.teamcode.internal.CoreMessenger;
-import org.firstinspires.ftc.teamcode.internal.CoreOpMode;
-import org.firstinspires.ftc.teamcode.internal.math.Vector;
-import org.firstinspires.ftc.teamcode.messengers.DrivetrainMessenger;
+import org.firstinspires.ftc.teamcode.core.CoreLocalizer;
+import org.firstinspires.ftc.teamcode.core.CoreOpMode;
+import org.firstinspires.ftc.teamcode.core.math.Vector;
 
 import kotlin.NotImplementedError;
 
 public class ThreeWheelLocalizer extends CoreLocalizer {
     private final Encoder left, right, center;
-    private CoreMessenger messenger;
-    private int lastLeftPos, lastRightPos, lastCenterPos;
+    private double leftPos, rightPos, centerPos;
 
     public ThreeWheelLocalizer(CoreOpMode opMode) {
         super(opMode);
@@ -29,13 +26,6 @@ public class ThreeWheelLocalizer extends CoreLocalizer {
         left = new OverflowEncoder(new RawEncoder(opMode.hardwareMap.get(DcMotorEx.class, Constants.LEFT_ODOMETRY_NAME)));
         right = new OverflowEncoder(new RawEncoder(opMode.hardwareMap.get(DcMotorEx.class, Constants.RIGHT_ODOMETRY_NAME)));
         center = new OverflowEncoder(new RawEncoder(opMode.hardwareMap.get(DcMotorEx.class, Constants.CENTER_ODOMETRY_NAME)));
-
-        // Preload values
-        lastLeftPos = left.getPositionAndVelocity().position;
-        lastRightPos = right.getPositionAndVelocity().position;
-        lastCenterPos = center.getPositionAndVelocity().position;
-
-        messenger = opMode.getMessenger(DrivetrainMessenger.class);
     }
 
     @Override
@@ -60,13 +50,13 @@ public class ThreeWheelLocalizer extends CoreLocalizer {
         // right = dx-L*dTheta/2
         // center = dy +BdTheta
 
-        int leftDelta = leftPosVel.position - lastLeftPos;
-        int rightDelta = rightPosVel.position - lastRightPos;
-        int centerDelta = centerPosVel.position - lastCenterPos;
+        double dLeft = leftPosVel.position - leftPos;
+        double dRight = rightPosVel.position - rightPos;
+        double dCenter = centerPosVel.position - centerPos;
 
-        double dx = (rightDelta * OdometryConfig.LEFT_X_POSITION) - (leftDelta * OdometryConfig.RIGHT_X_POSITION) / OdometryConfig.X_DISTANCE;
-        double dTheta = (rightDelta - leftDelta) / OdometryConfig.X_DISTANCE;
-        double dy = centerDelta - OdometryConfig.CENTER_Y_POSITION * dTheta;
+        double dx = (dRight * OdometryConfig.LEFT_X_POSITION) - (dLeft * OdometryConfig.RIGHT_X_POSITION) / OdometryConfig.X_DISTANCE;
+        double dTheta = (dRight - dLeft) / OdometryConfig.X_DISTANCE;
+        double dy = dCenter - OdometryConfig.CENTER_Y_POSITION * dTheta;
 
         // Vector Rotation based on new theta
         double theta = currentPose.heading.toDouble() + dTheta;
@@ -76,10 +66,11 @@ public class ThreeWheelLocalizer extends CoreLocalizer {
         double y = currentPose.position.y + gradient.y;
 
         currentPose = new Pose2d(x, y, theta);
-        lastLeftPos = leftPosVel.position;
-        lastRightPos = rightPosVel.position;
-        lastCenterPos = centerPosVel.position;
+        leftPos = leftPosVel.position;
+        rightPos = rightPosVel.position;
+        centerPos = centerPosVel.position;
     }
+
 
     private void constVelUpdate() {
         // THE EXTRA STEP
@@ -89,13 +80,14 @@ public class ThreeWheelLocalizer extends CoreLocalizer {
         PositionVelocityPair rightPosVel = right.getPositionAndVelocity();
         PositionVelocityPair centerPosVel = center.getPositionAndVelocity();
 
-        int leftDelta = leftPosVel.position - lastLeftPos;
-        int rightDelta = rightPosVel.position - lastRightPos;
-        int centerDelta = centerPosVel.position - lastCenterPos;
 
-        double dx = (rightDelta * OdometryConfig.LEFT_X_POSITION) - (leftDelta * OdometryConfig.RIGHT_X_POSITION) / OdometryConfig.X_DISTANCE;
-        double dTheta = (rightDelta - leftDelta) / OdometryConfig.X_DISTANCE;
-        double dy = centerDelta - OdometryConfig.CENTER_Y_POSITION * dTheta;
+        double dLeft = leftPosVel.position - leftPos;
+        double dRight = rightPosVel.position - rightPos;
+        double dCenter = centerPosVel.position - centerPos;
+
+        double dx = (dRight * OdometryConfig.LEFT_X_POSITION) - (dLeft * OdometryConfig.RIGHT_X_POSITION) / OdometryConfig.X_DISTANCE;
+        double dTheta = (dRight - dLeft) / OdometryConfig.X_DISTANCE;
+        double dy = dCenter - OdometryConfig.CENTER_Y_POSITION * dTheta;
 
         double rf = dx / dTheta;
         double rfdy = rf * Math.sin(dTheta);
@@ -115,9 +107,9 @@ public class ThreeWheelLocalizer extends CoreLocalizer {
         double y = currentPose.position.y + gradient.y;
 
         currentPose = new Pose2d(x, y, theta);
-        lastLeftPos = leftPosVel.position;
-        lastRightPos = rightPosVel.position;
-        lastCenterPos = centerPosVel.position;
+        leftPos = leftPosVel.position;
+        rightPos = rightPosVel.position;
+        centerPos = centerPosVel.position;
     }
 
     private void constAccelUpdate() {

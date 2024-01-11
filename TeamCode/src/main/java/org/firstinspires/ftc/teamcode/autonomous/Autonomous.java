@@ -1,9 +1,6 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
-
-import org.firstinspires.ftc.teamcode.internal.CoreOpMode;
+import org.firstinspires.ftc.teamcode.core.CoreOpMode;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDrive;
 
@@ -18,7 +15,7 @@ public class Autonomous extends CoreOpMode {
 
     @Override
     public void runStart() throws InterruptedException {
-
+        // Build the trajectory for the rest of the auto
     }
     @Override
     public void runUpdate() throws InterruptedException {
