@@ -161,7 +161,7 @@ public class IMU extends CoreLocalizer {
     }
 
     @Override
-    public void update() {
+    public Twist2dDual<Time> update() {
         storedOrientation = imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, ANGLE_UNIT);
         try {
             storedVelocity = ((BNO055IMU) imu).getVelocity();

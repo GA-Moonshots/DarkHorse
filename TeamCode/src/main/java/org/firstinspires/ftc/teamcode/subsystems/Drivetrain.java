@@ -38,7 +38,9 @@ public abstract class Drivetrain extends CoreSubsystem {
         this.isFieldCentric = false;
     }
 
-    public void setFieldCentricTarget() {fieldCentricTarget = localizer.getHeading();}
+    public void setFieldCentricTarget() {
+        fieldCentricTarget = localizer.getPose().angle.value();
+    }
 
 
 

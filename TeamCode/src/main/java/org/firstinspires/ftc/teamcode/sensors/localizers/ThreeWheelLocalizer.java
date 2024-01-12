@@ -1,12 +1,17 @@
 package org.firstinspires.ftc.teamcode.sensors.localizers;
 
-import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.Vector2d;
+import org.firstinspires.ftc.teamcode.config.DriveConfig;
+
+import com.acmerobotics.roadrunner.DualNum;
+import com.acmerobotics.roadrunner.Time;
+import com.acmerobotics.roadrunner.Twist2dDual;
+import com.acmerobotics.roadrunner.Vector2dDual;
 import com.acmerobotics.roadrunner.ftc.Encoder;
 import com.acmerobotics.roadrunner.ftc.OverflowEncoder;
 import com.acmerobotics.roadrunner.ftc.PositionVelocityPair;
 import com.acmerobotics.roadrunner.ftc.RawEncoder;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.config.Constants;
 import org.firstinspires.ftc.teamcode.config.OdometryConfig;
@@ -14,7 +19,8 @@ import org.firstinspires.ftc.teamcode.core.CoreLocalizer;
 import org.firstinspires.ftc.teamcode.core.CoreOpMode;
 import org.firstinspires.ftc.teamcode.core.math.Vector;
 
-import kotlin.NotImplementedError;
+public final class ThreeWheelLocalizer extends CoreLocalizer {
+    public final Encoder left, right, center;
 
 public class ThreeWheelLocalizer extends CoreLocalizer {
     private final Encoder left, right, center;
@@ -28,20 +34,7 @@ public class ThreeWheelLocalizer extends CoreLocalizer {
         center = new OverflowEncoder(new RawEncoder(opMode.hardwareMap.get(DcMotorEx.class, Constants.CENTER_ODOMETRY_NAME)));
     }
 
-    @Override
     public void update() {
-        switch(OdometryConfig.RUN_MODE) {
-            case LINEAR:
-                linearUpdate();
-            case CONSTANT_VELOCITY_ARC:
-                constVelUpdate();
-            case CONSTANT_ACCELERATION_POLYNOMIAL:
-                constAccelUpdate();
-        }
-
-    }
-
-    private void linearUpdate() {
         PositionVelocityPair leftPosVel = left.getPositionAndVelocity();
         PositionVelocityPair rightPosVel = right.getPositionAndVelocity();
         PositionVelocityPair centerPosVel = center.getPositionAndVelocity();
