@@ -16,8 +16,7 @@ public class TwoWheelLocalizer extends CoreLocalizer {
     }
 
     @Override
-    public Twist2dDual<Time> update() {
+    public void update() {
 
-        return null;
     }
 }
