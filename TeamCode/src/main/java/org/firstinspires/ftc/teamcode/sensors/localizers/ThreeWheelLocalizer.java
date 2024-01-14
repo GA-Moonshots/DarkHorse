@@ -19,9 +19,6 @@ import org.firstinspires.ftc.teamcode.core.CoreLocalizer;
 import org.firstinspires.ftc.teamcode.core.CoreOpMode;
 import org.firstinspires.ftc.teamcode.core.math.Vector;
 
-public final class ThreeWheelLocalizer extends CoreLocalizer {
-    public final Encoder left, right, center;
-
 public class ThreeWheelLocalizer extends CoreLocalizer {
     private final Encoder left, right, center;
     private double leftPos, rightPos, centerPos;

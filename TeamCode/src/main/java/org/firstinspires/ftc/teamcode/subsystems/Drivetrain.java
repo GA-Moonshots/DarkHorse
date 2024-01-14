@@ -1,14 +1,12 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.acmerobotics.roadrunner.Trajectory;
-import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
-import com.acmerobotics.roadrunner.TrajectoryBuilder;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.core.CoreLocalizer;
-import org.firstinspires.ftc.teamcode.sensors.localizers.ThreeWheelLocalizer;
 import org.firstinspires.ftc.teamcode.core.CoreOpMode;
 import org.firstinspires.ftc.teamcode.core.CoreSubsystem;
+import org.firstinspires.ftc.teamcode.sensors.localizers.ThreeWheelLocalizer;
 
 public abstract class Drivetrain extends CoreSubsystem {
     protected boolean isFieldCentric = true;
@@ -39,7 +37,7 @@ public abstract class Drivetrain extends CoreSubsystem {
     }
 
     public void setFieldCentricTarget() {
-        fieldCentricTarget = localizer.getPose().angle.value();
+        fieldCentricTarget = localizer.getHeading();
     }
 
 

@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.core.CoreOpMode;
 import org.firstinspires.ftc.teamcode.sensors.IMU;
 
 public class TwoWheelLocalizer extends CoreLocalizer {
-    private IMU imu;
+    private final IMU imu;
     private Encoder parallel, perpendicular;
 
     public TwoWheelLocalizer(CoreOpMode opMode) {

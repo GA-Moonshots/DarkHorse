@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class Camera extends CoreSensor {
-    private AprilTagProcessor aprilTag;
-    private VisionPortal visionPortal;
+    private final AprilTagProcessor aprilTag;
+    private final VisionPortal visionPortal;
 
     // Storage state
     List<AprilTagDetection> detections;

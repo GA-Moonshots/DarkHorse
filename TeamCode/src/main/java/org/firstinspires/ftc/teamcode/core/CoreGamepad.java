@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.config.Config;
 
 public class CoreGamepad {
-    private Gamepad gamepad;
+    private final Gamepad gamepad;
 
     private boolean aPressed = false;
     private boolean aPressedLast = false;
