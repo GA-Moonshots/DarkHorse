@@ -41,26 +41,28 @@ public class Main extends CoreOpMode {
 
     @Override
     public void runUpdate() {
-        telemetry.addData("UPS", "%.2f", 1 / getDeltaTime());
+        while(isActive()) {
+            telemetry.addData("UPS", "%.2f", 1 / getDeltaTime());
 
-        if(gamepad1.getADown()) {
-            drive.toggleFieldCentric();
+            if(gamepad1.getADown()) {
+                drive.toggleFieldCentric();
+            }
+
+            if(gamepad1.getBButton()) {
+                drive.setFieldCentricTarget();
+            }
+
+            if(gamepad1.getLeftButtonDown()) {
+                this.isSlowMode = !isSlowMode;
+            }
+
+            double forward = gamepad1.getLeftStickY();
+            double strafe = gamepad1.getLeftStickX();
+            double turn = gamepad1.getRightStickX();
+
+            double multi = isSlowMode ? 0.2 : 1.0;
+            drive.drive(forward * multi, strafe * multi, turn * multi);
         }
-
-        if(gamepad1.getBButton()) {
-            drive.setFieldCentricTarget();
-        }
-
-        if(gamepad1.getLeftButtonDown()) {
-            this.isSlowMode = !isSlowMode;
-        }
-
-        double forward = gamepad1.getLeftStickY();
-        double strafe = gamepad1.getLeftStickX();
-        double turn = gamepad1.getRightStickX();
-
-        double multi = isSlowMode ? 0.2 : 1.0;
-        drive.drive(forward * multi, strafe * multi, turn * multi);
     }
 
     @Override

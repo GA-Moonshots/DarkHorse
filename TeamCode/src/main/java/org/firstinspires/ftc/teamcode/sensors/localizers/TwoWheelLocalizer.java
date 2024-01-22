@@ -13,6 +13,7 @@ public class TwoWheelLocalizer extends CoreLocalizer {
     public TwoWheelLocalizer(CoreOpMode opMode) {
         super(opMode);
         imu = opMode.getSensor(IMU.class);
+        update();
     }
 
     @Override

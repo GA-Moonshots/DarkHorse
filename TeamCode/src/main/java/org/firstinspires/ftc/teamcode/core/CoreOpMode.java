@@ -28,7 +28,6 @@ public abstract class CoreOpMode extends LinearOpMode {
 
     public void addSensor(CoreSensor sensor) {
         sensors.add(sensor);
-        sensor.update();
     }
     public void addSubsystem(CoreSubsystem system) {
         subsystems.add(system);
@@ -42,11 +41,7 @@ public abstract class CoreOpMode extends LinearOpMode {
                 return (T) sensor;
             }
         }
-        try {
-            return cls.getConstructor(CoreOpMode.class, String.class).newInstance(this, name);
-        } catch(Exception e) {
-            throw new RuntimeException(String.format("Sensor with name %s of type %s was not found.", name, cls.getName()));
-        }
+        throw new RuntimeException(String.format("Sensor with name %s of type %s was not found.", name, cls.getName()));
     }
 
     @SuppressWarnings("unchecked")
@@ -56,11 +51,7 @@ public abstract class CoreOpMode extends LinearOpMode {
                 return (T) sensor;
             }
         }
-        try {
-            return cls.getConstructor(CoreOpMode.class).newInstance(this);
-        } catch(Exception e) {
-            throw new RuntimeException(String.format("Sensor with of type %s was not found.", cls.getName()));
-        }
+        throw new RuntimeException(String.format("Sensor with of type %s was not found.", cls.getName()));
     }
 
     public boolean inInit() {

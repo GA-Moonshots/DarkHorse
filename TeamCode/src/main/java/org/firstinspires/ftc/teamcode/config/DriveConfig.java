@@ -14,6 +14,7 @@ import java.util.Arrays;
 
 @com.acmerobotics.dashboard.config.Config
 public class DriveConfig extends Config {
+    public static double DISPLAY_SIZE = 8;
     // IMU orientation
     // TODO: fill in these values based on
     //   see https://ftc-docs.firstinspires.org/en/latest/programming_resources/imu/imu.html?highlight=imu#physical-hub-mounting

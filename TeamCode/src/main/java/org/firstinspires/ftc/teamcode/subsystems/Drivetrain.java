@@ -1,8 +1,12 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Trajectory;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.config.DriveConfig;
 import org.firstinspires.ftc.teamcode.core.CoreLocalizer;
 import org.firstinspires.ftc.teamcode.core.CoreOpMode;
 import org.firstinspires.ftc.teamcode.core.CoreSubsystem;
@@ -20,7 +24,11 @@ public abstract class Drivetrain extends CoreSubsystem {
         super(opMode);
 
         this.telemetry = opMode.telemetry;
-        localizer = opMode.getSensor(ThreeWheelLocalizer.class);
+        try {
+            localizer = opMode.getSensor(ThreeWheelLocalizer.class);
+        } catch (RuntimeException e) {
+            localizer = new ThreeWheelLocalizer(opMode);
+        }
     }
 
     // INTERNAL STATE COMMANDS
@@ -47,6 +55,16 @@ public abstract class Drivetrain extends CoreSubsystem {
         // Continue with the last update state
 
         // Add robot to the dashboard field based on the pose
+        TelemetryPacket packet = new TelemetryPacket();
+        packet.fieldOverlay()
+                .setFill("red")
+                .fillCircle(localizer.getXPosition(), localizer.getYPosition(), DriveConfig.DISPLAY_SIZE)
+                .strokeLine(
+                        localizer.getXPosition(), localizer.getYPosition(),
+                        localizer.getXPosition() + (DriveConfig.DISPLAY_SIZE * Math.cos(localizer.getHeading())),
+                        localizer.getYPosition() + (DriveConfig.DISPLAY_SIZE * Math.sin(localizer.getHeading()))
+        );
+        FtcDashboard.getInstance().sendTelemetryPacket(packet);
     }
 
     // Drivetrain implementation specific commands

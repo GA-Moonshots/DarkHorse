@@ -10,6 +10,8 @@ import org.firstinspires.ftc.teamcode.config.DriveConfig;
 import org.firstinspires.ftc.teamcode.core.CoreOpMode;
 import org.firstinspires.ftc.teamcode.core.math.Vector;
 
+import java.lang.Math;
+
 public class MecanumDrive extends Drivetrain {
 
     // MOTORS

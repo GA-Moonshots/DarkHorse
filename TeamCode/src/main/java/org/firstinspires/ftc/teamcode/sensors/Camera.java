@@ -33,6 +33,7 @@ public class Camera extends CoreSensor {
                 .setCamera(name)
                 .addProcessor(aprilTag)
                 .build();
+        update();
     }
 
     @Override
